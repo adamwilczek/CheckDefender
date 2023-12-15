@@ -1,10 +1,5 @@
 ﻿$cred = get-credential
-$servers = Get-ADComputer -Filter "Name -like 'srvde*'" |select -exp name
-#$servers =  ('srvde005.rce-group.local', 'srvde084.rce-group.local')
-
-
-$collectionObj = New-Object PSObject
-
+$servers = Get-ADComputer -Filter "Name -like 'srvde*'" | Select-Object -exp name
 
 foreach ($comp in $servers)
 {
@@ -13,7 +8,7 @@ foreach ($comp in $servers)
 
 
 
-    $defender = Get-Service -Name windefend | select -expand status
+    $defender = Get-Service -Name windefend | Select-Object -expand status
     # Write-host $defender 
     if([string]::IsNullOrEmpty($defender))
     {
@@ -22,8 +17,8 @@ foreach ($comp in $servers)
     else
     {
         #Write-host "Windows Defender was found on the Server:" $env:computername -foregroundcolor "Cyan"
-        # Write-host "Service status" $defender -foregroundcolor "Cyan"
-         Get-Service -Name windefend | select -expand status
+        #Write-host "Service status" $defender -foregroundcolor "Cyan"
+         Get-Service -Name windefend | Select-Object -expand status
          Write-Host "$env:computername, $defender"
   
     }
@@ -36,18 +31,12 @@ Catch
 
    
     
-    } -credential $cred  -ErrorAction:SilentlyContinue | Export-Csv -NoTypeInformation 'C:\impex\aw\DefenderReport_AW.csv' -Force -Append
+    } -credential $cred  -ErrorAction:SilentlyContinue | Export-Csv -NoTypeInformation 'C:\scripts\CheckDefender\DefenderReport_AW.csv' -Force -Append
     
- 
 
- 
-  
-    
+
 } 
 
-
-
-#$collectionObj | export-csv 'C:\scripts\DefenderReport.csv' -notypeinformation
 
 
 
